@@ -24,6 +24,9 @@ class Film(db.Model, IDto):
     genre = db.Column(db.String(300))
     country = db.Column(db.String(300))
     budget = db.relationship("Budget", backref='film')
+    movie_description_id = db.Column(db.Integer, db.ForeignKey('movie_description.id'), nullable=True)
+
+    film_directors = db.relationship("FilmHasDirector", backref="film")
 
     # # Relationship 1:M
     # client_type_id = db.Column(db.Integer, db.ForeignKey('client_type.id'), nullable=True)
@@ -33,22 +36,42 @@ class Film(db.Model, IDto):
         return f"Film({self.id}, '{self.name}', '{self.duration}', '{self.release_year}', '{self.genre}', '{self.country}',)"
 
     def put_into_dto(self) -> Dict[str, Any]:
-
         """
         Puts domain object into DTO without relationship
         :return: DTO object as dictionary
         """
 
         budget = [budget.put_into_dto() for budget in self.budget]
+
+        directors_list = [
+            {
+                "id": directorFilmPair.director.id,
+                "name": directorFilmPair.director.name,
+                "surname": directorFilmPair.director.surname,
+                "age": directorFilmPair.director.age,
+                "nationality": directorFilmPair.director.nationality,
+                "experience": directorFilmPair.director.experience,
+                "gender": directorFilmPair.director.gender,
+            }                for directorFilmPair in self.film_directors]
+
+
         return {
             "id": self.id,
             "name": self.name,
             "duration": self.duration,
             "release_year": self.release_year,
             "genre": self.genre,
-            "experience": self.experience,
             "country": self.country,
             "budget": budget,
+            "movie_description_info": {
+                "id": self.movie_description_info.id,
+                "plot": self.movie_description_info.plot,
+                "scene": self.movie_description_info.scene,
+                "action_time": self.movie_description_info.action_time,
+                "awards": self.movie_description_info.awards,
+                "age_group": self.movie_description_info.age_group}
+            ,
+            "directors-list": directors_list
 
         }
 
@@ -64,8 +87,8 @@ class Film(db.Model, IDto):
             duration=dto_dict.get("duration"),
             release_year=dto_dict.get("release_year"),
             genre=dto_dict.get("genre"),
-            experience=dto_dict.get("experience"),
             country=dto_dict.get("country"),
             budget=dto_dict.get("budget"),
+            movie_description_info=dto_dict.get("movie_description_info")
         )
         return obj
