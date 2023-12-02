@@ -15,7 +15,7 @@ film_bp = Blueprint('film', __name__, url_prefix='/film')
 
 
 @film_bp.get('')
-def get_all_films() -> Response:
+def get_all_film() -> Response:
     """
     Gets all objects from table using Service layer.
     :return: Response object
@@ -24,7 +24,7 @@ def get_all_films() -> Response:
 
 
 @film_bp.post('')
-def film_actor() -> Response:
+def create_film() -> Response:
     """
     Gets all objects from table using Service layer.
     :return: Response object

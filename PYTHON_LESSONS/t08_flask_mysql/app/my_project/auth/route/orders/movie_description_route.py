@@ -29,8 +29,8 @@ def create_movie_description() -> Response:
     Gets all objects from table using Service layer.
     :return: Response object
     """
-    movie_description = request.get_json()
-    film = MovieDescription.create_from_dto(movie_description)
+    content = request.get_json()
+    movie_description = MovieDescription.create_from_dto(content)
     movie_description_controller.create(movie_description)
     return make_response(jsonify(movie_description.put_into_dto()), HTTPStatus.CREATED)
 

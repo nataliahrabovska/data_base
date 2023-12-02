@@ -24,18 +24,18 @@ def get_all_director() -> Response:
 
 
 @director_bp.post('')
-def director_actor() -> Response:
+def create_director() -> Response:
     """
     Gets all objects from table using Service layer.
     :return: Response object
     """
-    director = request.get_json()
-    film = Director.create_from_dto(director)
+    content = request.get_json()
+    director = Director.create_from_dto(content)
     director_controller.create(director)
-    return make_response(jsonify(film.put_into_dto()), HTTPStatus.CREATED)
+    return make_response(jsonify(director.put_into_dto()), HTTPStatus.CREATED)
 
 
-@director_bp.get('/<int:film_id>')
+@director_bp.get('/<int:director_id>')
 def get_director(director_id: int) -> Response:
     """
     Gets client by ID.

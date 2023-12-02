@@ -9,6 +9,7 @@ from typing import Dict, Any
 
 from t08_flask_mysql.app.my_project import db
 from t08_flask_mysql.app.my_project.auth.domain.i_dto import IDto
+from t08_flask_mysql.app.my_project.auth.domain.orders.movie_description import MovieDescription
 
 
 class Film(db.Model, IDto):
@@ -52,8 +53,7 @@ class Film(db.Model, IDto):
                 "nationality": directorFilmPair.director.nationality,
                 "experience": directorFilmPair.director.experience,
                 "gender": directorFilmPair.director.gender,
-            }                for directorFilmPair in self.film_directors]
-
+            } for directorFilmPair in self.film_directors]
 
         return {
             "id": self.id,
@@ -82,6 +82,10 @@ class Film(db.Model, IDto):
         :param dto_dict: DTO object
         :return: Domain object
         """
+        movie_description_info_dict = dto_dict.get("movie_description_info", {})
+
+        movie_description_info = MovieDescription.create_from_dto(movie_description_info_dict)
+
         obj = Film(
             name=dto_dict.get("name"),
             duration=dto_dict.get("duration"),
@@ -89,6 +93,6 @@ class Film(db.Model, IDto):
             genre=dto_dict.get("genre"),
             country=dto_dict.get("country"),
             budget=dto_dict.get("budget"),
-            movie_description_info=dto_dict.get("movie_description_info")
+            movie_description_info=movie_description_info  # Assign the created MovieDescription instance
         )
         return obj
