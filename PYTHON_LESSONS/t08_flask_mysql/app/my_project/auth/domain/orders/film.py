@@ -7,6 +7,8 @@ apavelchak@gmail.com
 from __future__ import annotations
 from typing import Dict, Any
 
+from sqlalchemy import event
+
 from t08_flask_mysql.app.my_project import db
 from t08_flask_mysql.app.my_project.auth.domain.i_dto import IDto
 from t08_flask_mysql.app.my_project.auth.domain.orders.movie_description import MovieDescription
@@ -34,7 +36,7 @@ class Film(db.Model, IDto):
     # client_type = db.relationship("ClientType", backref="clients")  # only on the child class
 
     def __repr__(self) -> str:
-        return f"Film({self.id}, '{self.name}', '{self.duration}', '{self.release_year}', '{self.genre}', '{self.country}',)"
+        return f"Film({self.id}, '{self.name}', '{self.duration}', '{self.release_year}', '{self.genre}', '{self.country}')"
 
     def put_into_dto(self) -> Dict[str, Any]:
         """
@@ -96,3 +98,13 @@ class Film(db.Model, IDto):
             movie_description_info=movie_description_info  # Assign the created MovieDescription instance
         )
         return obj
+
+
+def receive_after_insert_review(mapper, connection, target):
+    film_id = target.film_id
+    film = db.session.query(Film).get(film_id)
+    if film:
+        film_reviews = film.reviews if hasattr(film, 'reviews') else []
+        film_reviews.append(target)
+
+

@@ -7,7 +7,7 @@ apavelchak@gmail.com
 from typing import List
 
 from t08_flask_mysql.app.my_project.auth.dao.general_dao import GeneralDAO
-from t08_flask_mysql.app.my_project.auth.domain import MovieDescription
+from t08_flask_mysql.app.my_project.auth.domain.orders.movie_description import MovieDescription
 
 
 class MovieDescriptionDAO(GeneralDAO):

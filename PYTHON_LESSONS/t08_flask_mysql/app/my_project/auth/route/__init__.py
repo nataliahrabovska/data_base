@@ -23,6 +23,7 @@ def register_routes(app: Flask) -> None:
     from .orders.director_route import director_bp
     from .orders.film_has_director_route import film_has_director_bp
     from .orders.movie_description_route import movie_description_bp
+    from .orders.review_route import review_bp
 
     app.register_blueprint(actor_bp)
     app.register_blueprint(film_bp)
@@ -31,3 +32,4 @@ def register_routes(app: Flask) -> None:
     app.register_blueprint(director_bp)
     app.register_blueprint(film_has_director_bp)
     app.register_blueprint(movie_description_bp)
+    app.register_blueprint(review_bp)
